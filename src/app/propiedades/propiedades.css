@@ -1,0 +1,127 @@
+.text-navy {
+  color: #0f172a;
+}
+
+.btn-outline-navy {
+  border-color: #0f172a;
+  color: #0f172a;
+  background-color: transparent;
+}
+
+.btn-outline-navy:hover, .btn-outline-navy.active {
+  background-color: #0f172a;
+  color: #fff;
+}
+
+/* SVG interactive lot map classes */
+.interactive-svg-map rect {
+  cursor: pointer;
+  stroke: #475569;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.interactive-svg-map rect:hover {
+  stroke: #000;
+  stroke-width: 3;
+  opacity: 0.85;
+}
+
+.lot-available {
+  fill: #10b981 !important; /* Green */
+}
+
+.lot-reserved {
+  fill: #f59e0b !important; /* Orange/Yellow */
+}
+
+.lot-sold {
+  fill: #ef4544 !important; /* Red */
+}
+
+.lot-unregistered {
+  fill: #cbd5e1 !important; /* Slate 300 / Grey */
+}
+
+/* SVG Labels */
+.svg-lot-label {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  text-anchor: middle;
+  cursor: pointer;
+  pointer-events: none; /* Let clicks pass through to the rect */
+}
+
+.lot-unregistered + .svg-lot-label,
+rect.lot-unregistered ~ text {
+  fill: #475569; /* Dark label for grey lots */
+}
+
+/* Legend Boxes */
+.legend-box {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #475569;
+}
+
+/* Info Side Panel */
+.height-100 {
+  height: 100%;
+}
+
+.text-muted-50 {
+  color: rgba(71, 85, 105, 0.4);
+}
+
+/* Property Catalog Cards */
+.property-card {
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+.property-img-wrapper {
+  height: 200px;
+  overflow: hidden;
+}
+
+.property-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.property-card:hover .property-img {
+  transform: scale(1.05);
+}
+
+.top-3 {
+  top: 1rem;
+}
+
+.start-3 {
+  left: 1rem;
+}
+
+.bottom-3 {
+  bottom: 1rem;
+}
+
+.end-3 {
+  right: 1rem;
+}
+.svg-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.leading-relaxed {
+  line-height: 1.6;
+}

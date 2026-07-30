@@ -1,0 +1,11 @@
+.bg-dark-navy {
+  background-color: #0b0f19; /* Slightly darker than slate 900 */
+}
+
+.border-navy-light {
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.footer {
+  font-size: 13px;
+}

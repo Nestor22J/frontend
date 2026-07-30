@@ -1,0 +1,452 @@
+<app-navbar></app-navbar>
+
+<div class="container py-4 min-vh-100">
+  
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="fw-bold text-navy mb-1">
+        <span *ngIf="authService.esAdmin()">Panel de Control - Administrador</span>
+        <span *ngIf="authService.esAgente()">Panel del Asesor Comercial</span>
+        <span *ngIf="authService.esCliente()">Mi Espacio Inmobiliario - Inkapolis</span>
+      </h2>
+      <p class="text-muted">¡Hola, {{ usuarioActual()?.nombre }}! Bienvenido de vuelta al sistema de lotización de Inkapolis.</p>
+    </div>
+    <div class="col-md-4 text-md-end d-flex align-items-center justify-content-md-end">
+      <span class="badge bg-navy text-uppercase p-2 px-3 fs-6">Sesión: {{ usuarioActual()?.rol }}</span>
+    </div>
+  </div>
+
+  <!-- ==================== STATISTICS ROWS BY ROLE ==================== -->
+  
+  <!-- ADMIN Stats Row -->
+  <div class="row g-3 mb-5" *ngIf="authService.esAdmin()">
+    <div class="col-md-3 col-sm-6">
+      <div class="card stat-card bg-primary-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Total Lotes</h6>
+            <h2 class="fw-bold mb-0">{{ totalLotes() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-map fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card stat-card bg-success-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Total Citas</h6>
+            <h2 class="fw-bold mb-0">{{ totalCitas() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-calendar-event fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card stat-card bg-info-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Total Contratos</h6>
+            <h2 class="fw-bold mb-0">{{ totalContratos() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-file-earmark-text fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="card stat-card bg-warning-grad text-dark border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-dark-50 small mb-1">Total Clientes</h6>
+            <h2 class="fw-bold mb-0">{{ totalClientes() }}</h2>
+          </div>
+          <div class="icon-box bg-dark-10"><i class="bi bi-people fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENTE Stats Row -->
+  <div class="row g-3 mb-5" *ngIf="authService.esAgente()">
+    <div class="col-md-4">
+      <div class="card stat-card bg-primary-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Lotes Gestionados</h6>
+            <h2 class="fw-bold mb-0">{{ totalLotes() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-map fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card stat-card bg-success-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Citas Asignadas</h6>
+            <h2 class="fw-bold mb-0">{{ totalCitas() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-calendar-event fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card stat-card bg-info-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Contratos Emitidos</h6>
+            <h2 class="fw-bold mb-0">{{ totalContratos() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-file-earmark-text fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENTE Stats Row -->
+  <div class="row g-3 mb-5" *ngIf="authService.esCliente()">
+    <div class="col-md-4">
+      <div class="card stat-card bg-primary-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Terrenos / Lotes</h6>
+            <h2 class="fw-bold mb-0">{{ totalLotes() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-houses fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card stat-card bg-success-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Visitas Programadas</h6>
+            <h2 class="fw-bold mb-0">{{ totalCitas() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-calendar-check fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card stat-card bg-info-grad text-white border-0 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="text-uppercase text-white-50 small mb-1">Mis Contratos Activos</h6>
+            <h2 class="fw-bold mb-0">{{ totalContratos() }}</h2>
+          </div>
+          <div class="icon-box bg-white-10"><i class="bi bi-file-text fs-3"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== BODY PANELS BY ROLE ==================== -->
+
+  <!-- 1. ADMIN PANEL -->
+  <div class="row" *ngIf="authService.esAdmin()">
+    <div class="col-lg-3 mb-4">
+      <div class="card border-0 shadow-sm sidebar-card p-3">
+        <h5 class="fw-bold text-navy mb-3 px-2">Menú Administrativo</h5>
+        <div class="nav flex-column nav-pills">
+          <button class="nav-link text-start mb-2 px-3 py-2 fw-semibold" [class.active]="activeTab() === 'stats'" (click)="changeTab('stats')">
+            <i class="bi bi-grid-fill me-2"></i> Resumen de Operaciones
+          </button>
+          <button class="nav-link text-start mb-2 px-3 py-2 fw-semibold" [class.active]="activeTab() === 'usuarios'" (click)="changeTab('usuarios')">
+            <i class="bi bi-person-fill-gear me-2"></i> Usuarios del Sistema
+          </button>
+          <button class="nav-link text-start mb-2 px-3 py-2 fw-semibold" [class.active]="activeTab() === 'agentes'" (click)="changeTab('agentes')">
+            <i class="bi bi-briefcase-fill me-2"></i> Agentes de Ventas
+          </button>
+          <button class="nav-link text-start mb-2 px-3 py-2 fw-semibold" [class.active]="activeTab() === 'clientes'" (click)="changeTab('clientes')">
+            <i class="bi bi-people-fill me-2"></i> Clientes / Leads
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      
+      <!-- TAB: Stats Resumen -->
+      <div *ngIf="activeTab() === 'stats'" class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <h4 class="fw-bold text-navy mb-3">Consola General de Inkapolis</h4>
+        <p class="text-muted leading-relaxed">
+          Desde aquí puedes monitorear y administrar todas las entidades del negocio. Tienes control completo sobre los accesos de usuarios, las comisiones de los asesores de ventas, y la validación de contratos generados.
+        </p>
+        <div class="alert alert-warning border-0 d-flex align-items-center py-3 mb-0" role="alert">
+          <i class="bi bi-shield-lock-fill me-3 fs-4 text-warning"></i>
+          <div>
+            <strong class="text-dark">Seguridad de Administrador:</strong> Puedes activar/desactivar cuentas de asesores y clientes de forma inmediata desde la pestaña de **Usuarios del Sistema** para garantizar la integridad operativa.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Usuarios -->
+      <div *ngIf="activeTab() === 'usuarios'" class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h4 class="fw-bold text-navy mb-0">Usuarios Registrados</h4>
+          <span class="badge bg-primary">{{ usuariosList().length }} Cuentas</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th scope="col" class="border-0">Nombre</th>
+                <th scope="col" class="border-0">Correo</th>
+                <th scope="col" class="border-0">Rol</th>
+                <th scope="col" class="border-0">Estado</th>
+                <th scope="col" class="border-0 text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of usuariosList()">
+                <td>
+                  <div class="fw-bold text-dark">{{ u.nombre }}</div>
+                  <span class="text-muted small">Registrado el {{ u.fecha_registro | date:'dd/MM/yyyy' }}</span>
+                </td>
+                <td>{{ u.correo }}</td>
+                <td>
+                  <span class="badge" [class.bg-danger]="u.rol === 'admin'" [class.bg-success]="u.rol === 'agente'" [class.bg-secondary]="u.rol === 'cliente'">
+                    {{ u.rol }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [class.bg-success-subtle]="u.estado" [class.text-success]="u.estado" [class.bg-danger-subtle]="!u.estado" [class.text-danger]="!u.estado">
+                    {{ u.estado ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm" [class.btn-outline-danger]="u.estado" [class.btn-outline-success]="!u.estado" (click)="cambiarEstadoUsuario(u)" [disabled]="u.id_usuario === usuarioActual()?.id_usuario">
+                    {{ u.estado ? 'Desactivar' : 'Activar' }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Agentes -->
+      <div *ngIf="activeTab() === 'agentes'" class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <h4 class="fw-bold text-navy mb-4">Asesores de Ventas</h4>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th scope="col" class="border-0">Código</th>
+                <th scope="col" class="border-0">Agente</th>
+                <th scope="col" class="border-0">Especialidad</th>
+                <th scope="col" class="border-0">Fecha Ingreso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ag of agentesList()">
+                <td class="fw-bold text-primary">{{ ag.codigo_agente }}</td>
+                <td>{{ ag.nombre_agente || ('Usuario ID: ' + ag.id_usuario) }}</td>
+                <td><span class="text-muted">{{ ag.especialidad || 'General' }}</span></td>
+                <td>{{ ag.fecha_ingreso | date:'dd/MM/yyyy' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Clientes -->
+      <div *ngIf="activeTab() === 'clientes'" class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <h4 class="fw-bold text-navy mb-4">Clientes / Inversionistas</h4>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th scope="col" class="border-0">DNI</th>
+                <th scope="col" class="border-0">Cliente</th>
+                <th scope="col" class="border-0">Ocupación</th>
+                <th scope="col" class="border-0">Presupuesto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cl of clientesList()">
+                <td class="fw-semibold">{{ cl.dni || 'No asignado' }}</td>
+                <td>{{ cl.nombre_cliente }}</td>
+                <td>{{ cl.ocupacion || 'Particular' }}</td>
+                <td class="fw-bold text-success">{{ cl.presupuesto_max ? ('S/. ' + (cl.presupuesto_max | number)) : 'Sin límite' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. AGENTE PANEL -->
+  <div class="row g-4" *ngIf="authService.esAgente()">
+    
+    <!-- Left Column: Managed properties -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white height-100">
+        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+          <h5 class="fw-bold text-navy mb-0"><i class="bi bi-houses text-primary me-2"></i>Mis Terrenos Asignados</h5>
+          <span class="badge bg-primary">{{ misPropiedadesList().length }} Lotes</span>
+        </div>
+        <div *ngIf="misPropiedadesList().length === 0" class="text-center py-5 text-muted">
+          No tienes propiedades asignadas.
+        </div>
+        <div *ngIf="misPropiedadesList().length > 0" class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th class="border-0">Lote</th>
+                <th class="border-0">Ubicación</th>
+                <th class="border-0">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of misPropiedadesList()">
+                <td>
+                  <div class="fw-bold">{{ p.titulo }}</div>
+                  <span class="text-success small fw-semibold">S/. {{ p.precio | number }}</span>
+                </td>
+                <td class="small text-muted">{{ p.distrito }}</td>
+                <td>
+                  <span class="badge text-uppercase"
+                        [class.bg-success]="p.estado === 'disponible'"
+                        [class.bg-warning]="p.estado === 'reservado'"
+                        [class.bg-danger]="p.estado === 'vendido'">
+                    {{ p.estado }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Assigned citas -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm p-4 bg-white height-100">
+        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+          <h5 class="fw-bold text-navy mb-0"><i class="bi bi-calendar3 text-success me-2"></i>Mis Citas Pendientes</h5>
+          <span class="badge bg-success">{{ misCitasList().length }} Visitas</span>
+        </div>
+        <div *ngIf="misCitasList().length === 0" class="text-center py-5 text-muted">
+          No tienes citas programadas para esta semana.
+        </div>
+        <div *ngIf="misCitasList().length > 0" class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th class="border-0">Fecha / Hora</th>
+                <th class="border-0">Ubicación / Modalidad</th>
+                <th class="border-0">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of misCitasList()">
+                <td>
+                  <div class="fw-bold small">{{ c.fecha_hora | date:'dd/MM/yyyy - hh:mm a' }}</div>
+                  <span class="text-muted small">Lote ID: #{{ c.id_propiedad }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-light text-dark text-capitalize">{{ c.modalidad }}</span>
+                </td>
+                <td>
+                  <span class="badge text-uppercase"
+                        [class.bg-warning-subtle]="c.estado === 'pendiente'"
+                        [class.text-warning]="c.estado === 'pendiente'"
+                        [class.bg-primary-subtle]="c.estado === 'confirmada'"
+                        [class.text-primary]="c.estado === 'confirmada'"
+                        [class.bg-success-subtle]="c.estado === 'realizada'"
+                        [class.text-success]="c.estado === 'realizada'">
+                    {{ c.estado }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 3. CLIENTE PANEL -->
+  <div class="row g-4" *ngIf="authService.esCliente()">
+    
+    <!-- Left Column: Purchases / Reserved Lots -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-houses-fill text-primary me-2"></i>Mis Inversiones Inmobiliarias</h5>
+        <div *ngIf="misPropiedadesList().length === 0" class="text-center py-5 text-muted">
+          <i class="bi bi-map-fill fs-2 d-block text-muted-50 mb-2"></i>
+          Aún no posees terrenos reservados. ¡Revisa nuestro catálogo en línea para separar tu lote!
+          <div class="mt-3">
+            <a routerLink="/propiedades" class="btn btn-sm btn-primary"><i class="bi bi-compass me-1"></i> Ver Plano de Lotes</a>
+          </div>
+        </div>
+        <div *ngIf="misPropiedadesList().length > 0" class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th class="border-0">Terreno / Proyecto</th>
+                <th class="border-0">Área</th>
+                <th class="border-0">Precio Acordado</th>
+                <th class="border-0">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of misPropiedadesList()">
+                <td>
+                  <div class="fw-bold text-navy">{{ p.titulo }}</div>
+                  <span class="small text-muted">{{ p.direccion }}, {{ p.distrito }}</span>
+                </td>
+                <td>{{ p.area_m2 || 120 }} m²</td>
+                <td><span class="fw-bold text-success">S/. {{ p.precio | number }}</span></td>
+                <td>
+                  <span class="badge text-uppercase p-2"
+                        [class.bg-warning]="p.estado === 'reservado'"
+                        [class.text-dark]="p.estado === 'reservado'"
+                        [class.bg-dark]="p.estado === 'vendido'"
+                        [class.text-white]="p.estado === 'vendido'">
+                    {{ p.estado === 'reservado' ? 'Reservado' : 'Adquirido' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Document history / active contracts -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-file-earmark-lock-fill text-warning me-2"></i>Mis Contratos y Descargas</h5>
+        <div *ngIf="misContratosList().length === 0" class="text-center py-4 text-muted">
+          No se encontraron actas firmadas.
+        </div>
+        <div *ngIf="misContratosList().length > 0">
+          <div class="list-group list-group-flush">
+            <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3" *ngFor="let c of misContratosList()">
+              <div>
+                <h6 class="mb-0 fw-bold text-capitalize">{{ c.tipo_contrato }}</h6>
+                <span class="text-muted small">Código Contrato: #{{ c.id_contrato }}</span>
+              </div>
+              <div>
+                <a [href]="'http://localhost:3000/contratos/' + c.id_contrato + '/pdf'" target="_blank" class="btn btn-sm btn-outline-danger" title="Descargar PDF">
+                  <i class="bi bi-file-pdf-fill me-1"></i> Descargar PDF
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<app-footer></app-footer>

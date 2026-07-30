@@ -1,0 +1,141 @@
+<div class="login-wrapper d-flex align-items-center justify-content-center min-vh-100 p-3">
+  <div class="card login-card border-0 shadow-lg overflow-hidden">
+    <div class="row g-0">
+      
+      <!-- Left side: Visual Branding banner (hidden on small screens) -->
+      <div class="col-md-6 d-none d-md-flex flex-column justify-content-between p-5 text-white brand-section position-relative">
+        <div class="brand-overlay"></div>
+        <div class="position-relative z-index-2">
+          <h2 class="fw-bold mb-1"><i class="bi bi-houses-fill me-2 text-warning"></i>Inkapolis</h2>
+          <p class="text-warning-50 small mb-0">Inversiones Inmobiliarias</p>
+        </div>
+        
+        <div class="position-relative z-index-2 my-auto">
+          <h1 class="display-5 fw-extrabold text-white mb-3">Encuentra tu lote ideal</h1>
+          <p class="lead text-light-50">Gestiona tus proyectos de habilitación urbana y compra tus terrenos con financiamiento a tu medida.</p>
+        </div>
+
+        <div class="position-relative z-index-2">
+          <span class="small text-white-50">© 2026 Inkapolis Inversiones S.A.C.</span>
+        </div>
+      </div>
+
+      <!-- Right side: Authentication Form -->
+      <div class="col-md-6 p-4 p-md-5 bg-white d-flex align-items-center">
+        <div class="w-100">
+          
+          <div class="text-center mb-4 d-md-none">
+            <h2 class="fw-bold text-primary mb-1"><i class="bi bi-houses-fill text-warning me-1"></i>Inkapolis</h2>
+            <p class="text-muted small">Inversiones Inmobiliarias</p>
+          </div>
+
+          <h3 class="fw-bold text-dark mb-1">{{ isRegister() ? 'Crear una Cuenta' : 'Iniciar Sesión' }}</h3>
+          <p class="text-muted mb-4">{{ isRegister() ? 'Únete a nosotros para encontrar y separar tus lotes.' : 'Ingresa tus credenciales para acceder a tu panel.' }}</p>
+
+          <!-- Success & Error messages -->
+          <div *ngIf="errorMessage()" class="alert alert-danger d-flex align-items-center alert-dismissible fade show border-0 py-2 mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div class="small">{{ errorMessage() }}</div>
+          </div>
+          <div *ngIf="successMessage()" class="alert alert-success d-flex align-items-center alert-dismissible fade show border-0 py-2 mb-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <div class="small">{{ successMessage() }}</div>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <form *ngIf="!isRegister()" (ngSubmit)="onSubmitLogin()">
+            <div class="mb-3">
+              <label for="correoLogin" class="form-label small fw-semibold text-muted">Correo Electrónico</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-envelope"></i></span>
+                <input type="email" id="correoLogin" class="form-control bg-light border-0 py-2" placeholder="ejemplo@correo.com" [(ngModel)]="loginData.correo" name="correo" required>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="contrasenaLogin" class="form-label small fw-semibold text-muted">Contraseña</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-0 text-muted"><i class="bi bi-lock"></i></span>
+                <input type="password" id="contrasenaLogin" class="form-control bg-light border-0 py-2" placeholder="••••••••" [(ngModel)]="loginData.contrasena" name="contrasena" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm mb-3">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+            </button>
+          </form>
+
+          <!-- REGISTER FORM -->
+          <form *ngIf="isRegister()" (ngSubmit)="onSubmitRegister()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nombreReg" class="form-label small fw-semibold text-muted">Nombre Completo *</label>
+                <input type="text" id="nombreReg" class="form-control bg-light border-0" placeholder="Juan Pérez" [(ngModel)]="registerData.nombre" name="nombre" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="correoReg" class="form-label small fw-semibold text-muted">Correo Electrónico *</label>
+                <input type="email" id="correoReg" class="form-control bg-light border-0" placeholder="juan@correo.com" [(ngModel)]="registerData.correo" name="correo" required>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="contrasenaReg" class="form-label small fw-semibold text-muted">Contraseña *</label>
+                <input type="password" id="contrasenaReg" class="form-control bg-light border-0" placeholder="Mín. 6 caracteres" [(ngModel)]="registerData.contrasena" name="contrasena" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="telefonoReg" class="form-label small fw-semibold text-muted">Teléfono</label>
+                <input type="text" id="telefonoReg" class="form-control bg-light border-0" placeholder="952000000" [(ngModel)]="registerData.telefono" name="telefono">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="rolReg" class="form-label small fw-semibold text-muted">Registrarse como *</label>
+              <select id="rolReg" class="form-select bg-light border-0" [(ngModel)]="registerData.rol" name="rol" required>
+                <option value="cliente">Cliente (Inversionista / Comprador)</option>
+                <option value="agente">Agente Inmobiliario (Asesor de Ventas)</option>
+                <option value="admin">Administrador (Gestor de Proyectos)</option>
+              </select>
+            </div>
+
+            <!-- Conditional fields for CLIENT -->
+            <div *ngIf="registerData.rol === 'cliente'" class="card border-0 bg-light p-3 mb-3">
+              <p class="small text-muted mb-2"><i class="bi bi-info-circle me-1"></i>Puedes completar tu perfil (presupuesto, ocupación, etc.) después de registrarte.</p>
+              <div class="row">
+                <div class="col-md-6 mb-2">
+                  <label for="dniReg" class="form-label small fw-semibold text-muted">DNI / Documento</label>
+                  <input type="text" id="dniReg" class="form-control bg-white border-0" placeholder="DNI del cliente" [(ngModel)]="registerData.dni" name="dni">
+                </div>
+                <div class="col-md-6 mb-2">
+                  <label for="direccionReg" class="form-label small fw-semibold text-muted">Dirección</label>
+                  <input type="text" id="direccionReg" class="form-control bg-white border-0" placeholder="Av. Bolognesi 123" [(ngModel)]="registerData.direccion" name="direccion">
+                </div>
+              </div>
+            </div>
+
+            <!-- Conditional fields for AGENT -->
+            <div *ngIf="registerData.rol === 'agente'" class="card border-0 bg-light p-3 mb-3">
+              <div>
+                <label for="especialidadReg" class="form-label small fw-semibold text-muted">Especialidad de Ventas</label>
+                <input type="text" id="especialidadReg" class="form-control bg-white border-0" placeholder="Ej. Ventas residenciales, Terrenos urbanos" [(ngModel)]="registerData.especialidad" name="especialidad">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100 py-2 fw-semibold shadow-sm mb-3 text-dark">
+              <i class="bi bi-person-plus-fill me-2"></i>Registrar Cuenta
+            </button>
+          </form>
+
+          <div class="text-center mt-3">
+            <span class="text-muted small">{{ isRegister() ? '¿Ya tienes una cuenta?' : '¿No tienes cuenta aún?' }}</span>
+            <button class="btn btn-link text-primary p-0 ms-1 fw-semibold small text-decoration-none" (click)="toggleMode()">
+              {{ isRegister() ? 'Inicia Sesión' : 'Regístrate aquí' }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

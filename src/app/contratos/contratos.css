@@ -1,0 +1,41 @@
+.text-navy {
+  color: #0f172a;
+}
+
+.bg-navy {
+  background-color: #0f172a;
+  color: #fff;
+}
+
+.table td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.leading-relaxed {
+  line-height: 1.6;
+}
+
+.bg-success-subtle {
+  background-color: rgba(16, 185, 129, 0.15);
+}
+
+.bg-secondary-subtle {
+  background-color: rgba(100, 116, 139, 0.15);
+}
+
+.bg-danger-subtle {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.text-success {
+  color: #10b981 !important;
+}
+
+.text-danger {
+  color: #ef4544 !important;
+}
+
+.text-secondary {
+  color: #64748b !important;
+}

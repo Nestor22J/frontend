@@ -1,0 +1,44 @@
+.text-navy {
+  color: #0f172a;
+}
+
+.max-w-200 {
+  max-width: 200px;
+}
+
+.table td {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.text-warning-dark {
+  color: #b45309 !important;
+}
+
+.text-primary-dark {
+  color: #1d4ed8 !important;
+}
+
+.text-danger-dark {
+  color: #b91c1c !important;
+}
+
+.text-success-dark {
+  color: #047857 !important;
+}
+
+.bg-warning-subtle {
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+.bg-primary-subtle {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+.bg-danger-subtle {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.bg-success-subtle {
+  background-color: rgba(16, 185, 129, 0.15);
+}

@@ -1,0 +1,178 @@
+<app-navbar></app-navbar>
+
+<div class="container py-4 min-vh-100">
+  
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="fw-bold text-navy mb-1">Citas y Visitas Guiadas</h2>
+      <p class="text-muted">Coordina reuniones presenciales o virtuales con nuestros asesores para conocer físicamente los lotes en venta.</p>
+    </div>
+  </div>
+
+  <div class="row">
+    
+    <!-- Form Col -->
+    <div class="col-lg-4 mb-4" *ngIf="!authService.esAdmin()">
+      <div class="card border-0 shadow-sm p-4 bg-white">
+        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-calendar-plus-fill text-primary me-2"></i>Programar Cita</h5>
+        
+        <form (ngSubmit)="agendarCita()">
+          
+          <!-- Property Selection -->
+          <div class="mb-3">
+            <label for="propiedad" class="form-label small fw-semibold text-muted">Lote / Propiedad *</label>
+            <select id="propiedad" class="form-select bg-light border-0" [(ngModel)]="nuevaCita.id_propiedad" name="id_propiedad" required>
+              <option value="0" disabled>-- Seleccione un Lote Disponible --</option>
+              <option *ngFor="let p of propiedadesList()" [value]="p.id_propiedad">
+                {{ p.titulo }} (S/. {{ p.precio | number }})
+              </option>
+            </select>
+          </div>
+
+          <!-- If Admin or Agente, select Client -->
+          <div class="mb-3" *ngIf="authService.esAdmin() || authService.esAgente()">
+            <label for="cliente" class="form-label small fw-semibold text-muted">Cliente *</label>
+            <select id="cliente" class="form-select bg-light border-0" [(ngModel)]="nuevaCita.id_cliente" name="id_cliente" required>
+              <option value="0" disabled>-- Seleccione un Cliente --</option>
+              <option *ngFor="let cl of clientesList()" [value]="cl.id_cliente">
+                {{ cl.nombre }} (DNI: {{ cl.dni }})
+              </option>
+            </select>
+          </div>
+
+          <!-- If Admin, select Agent -->
+          <div class="mb-3" *ngIf="authService.esAdmin()">
+            <label for="agente" class="form-label small fw-semibold text-muted">Agente Asignado *</label>
+            <select id="agente" class="form-select bg-light border-0" [(ngModel)]="nuevaCita.id_agente" name="id_agente" required>
+              <option value="0" disabled>-- Seleccione un Agente --</option>
+              <option *ngFor="let ag of agentesList()" [value]="ag.id_agente">
+                {{ ag.nombre }} ({{ ag.codigo_agente }})
+              </option>
+            </select>
+          </div>
+
+          <!-- Date and Time Picker -->
+          <div class="mb-3">
+            <label for="fecha_hora" class="form-label small fw-semibold text-muted">Fecha y Hora *</label>
+            <input type="datetime-local" id="fecha_hora" class="form-control bg-light border-0" [(ngModel)]="nuevaCita.fecha_hora" name="fecha_hora" required>
+          </div>
+
+          <!-- Modality -->
+          <div class="mb-3">
+            <label for="modalidad" class="form-label small fw-semibold text-muted">Modalidad de Reunión *</label>
+            <select id="modalidad" class="form-select bg-light border-0" [(ngModel)]="nuevaCita.modalidad" name="modalidad">
+              <option value="presencial">Presencial (Visita al terreno en Pachacámac)</option>
+              <option value="virtual">Virtual (Videollamada informativa / zoom)</option>
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="mb-4">
+            <label for="notas" class="form-label small fw-semibold text-muted">Notas / Petición especial</label>
+            <textarea id="notas" class="form-control bg-light border-0" rows="3" placeholder="Ej. Deseo transporte gratuito al terreno, iré con mi cónyuge..." [(ngModel)]="nuevaCita.notas" name="notas"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm">
+            <i class="bi bi-calendar-check-fill me-2"></i>Registrar Cita
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Appointments List Col -->
+    <div [ngClass]="authService.esAdmin() ? 'col-lg-12' : 'col-lg-8'">
+      <div class="card border-0 shadow-sm p-4 bg-white">
+        <h5 class="fw-bold text-navy mb-4"><i class="bi bi-clock-history text-primary me-2"></i>Historial de Citas</h5>
+        
+        <div *ngIf="citasList().length === 0" class="text-center py-5 text-muted">
+          <i class="bi bi-calendar-x fs-1 d-block text-muted-50 mb-2"></i>
+          No tienes ninguna cita agendada en este momento.
+        </div>
+
+        <div *ngIf="citasList().length > 0" class="table-responsive">
+          <table class="table table-hover align-middle border-0">
+            <thead class="table-light text-muted uppercase small fw-semibold">
+              <tr>
+                <th scope="col" class="border-0">Fecha y Hora</th>
+                <th scope="col" class="border-0">Lote/Terreno</th>
+                <th scope="col" class="border-0">Detalles</th>
+                <th scope="col" class="border-0">Estado</th>
+                <th scope="col" class="border-0 text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of citasList()">
+                <td>
+                  <div class="fw-bold text-dark">{{ c.fecha_hora | date:'dd/MM/yyyy - hh:mm a' }}</div>
+                  <span class="badge bg-light text-dark text-capitalize border small mt-1">{{ c.modalidad }}</span>
+                </td>
+                <td>
+                  <div class="fw-semibold text-navy">{{ c.titulo_propiedad || ('Lote ID #' + c.id_propiedad) }}</div>
+                  <div class="small text-muted mt-1" *ngIf="c.direccion_propiedad">
+                    <i class="bi bi-geo-alt-fill text-warning me-1"></i>{{ c.direccion_propiedad }}{{ c.distrito_propiedad ? ', ' + c.distrito_propiedad : '' }}
+                  </div>
+                </td>
+                <td>
+                  <div class="small mb-1"><strong>Cliente:</strong> {{ c.nombre_cliente || ('ID #' + c.id_cliente) }}</div>
+                  <div class="small text-muted mb-1" *ngIf="c.dni_cliente"><strong>DNI:</strong> {{ c.dni_cliente }}</div>
+                  <div class="small mb-1" *ngIf="c.telefono_cliente">
+                    <strong>Celular:</strong> 
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 ms-1">
+                      <i class="bi bi-telephone-fill me-1"></i>{{ c.telefono_cliente }}
+                    </span>
+                  </div>
+                  <div class="small text-muted" *ngIf="c.correo_cliente">
+                    <i class="bi bi-envelope-fill me-1"></i>{{ c.correo_cliente }}
+                  </div>
+                  <div class="small mt-2 pt-1 border-top"><strong>Asesor:</strong> {{ c.nombre_agente || ('ID #' + c.id_agente) }}</div>
+                  <div *ngIf="c.notas" class="small text-muted text-truncate max-w-200 mt-1" [title]="c.notas">
+                    <em>"{{ c.notas }}"</em>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge rounded-pill text-uppercase p-2"
+                        [class.bg-warning-subtle]="c.estado === 'pendiente'"
+                        [class.text-warning-dark]="c.estado === 'pendiente'"
+                        [class.bg-primary-subtle]="c.estado === 'confirmada'"
+                        [class.text-primary-dark]="c.estado === 'confirmada'"
+                        [class.bg-danger-subtle]="c.estado === 'cancelada'"
+                        [class.text-danger-dark]="c.estado === 'cancelada'"
+                        [class.bg-success-subtle]="c.estado === 'realizada'"
+                        [class.text-success-dark]="c.estado === 'realizada'">
+                    {{ c.estado }}
+                  </span>
+                </td>
+                <td class="text-end">
+                  
+                  <!-- Agent/Admin controls to manage state -->
+                  <div *ngIf="authService.esAdmin() || authService.esAgente(); else clientCancel" class="btn-group btn-group-sm">
+                    <button *ngIf="c.estado === 'pendiente'" class="btn btn-outline-primary" (click)="cambiarEstado(c.id_cita!, 'confirmada')" title="Confirmar Cita">
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button *ngIf="c.estado === 'confirmada'" class="btn btn-outline-success" (click)="cambiarEstado(c.id_cita!, 'realizada')" title="Marcar Realizada">
+                      <i class="bi bi-bookmark-check-fill"></i>
+                    </button>
+                    <button *ngIf="c.estado !== 'cancelada' && c.estado !== 'realizada'" class="btn btn-outline-danger" (click)="cambiarEstado(c.id_cita!, 'cancelada')" title="Cancelar Cita">
+                      <i class="bi bi-x-circle-fill"></i>
+                    </button>
+                  </div>
+
+                  <ng-template #clientCancel>
+                    <button *ngIf="c.estado === 'pendiente'" class="btn btn-sm btn-outline-danger" (click)="cambiarEstado(c.id_cita!, 'cancelada')">
+                      Cancelar Cita
+                    </button>
+                  </ng-template>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<app-footer></app-footer>
